@@ -12,9 +12,9 @@ const redBackground = chalk.red.inverse;
 // log(greenBold("Success!"));
 // log(greenBoldInverse("Success!"));
 
-module.exports = {
-	greenBold: greenBold,
-	log: log,
-	greedBackground: greedBackground,
-	redBackground: redBackground
-};
+// module.exports = {
+// 	greenBold: greenBold,
+// 	log: log,
+// 	greedBackground: greedBackground,
+// 	redBackground: redBackground
+// };

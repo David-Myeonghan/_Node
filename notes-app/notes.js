@@ -1,16 +1,14 @@
 const fs = require("fs");
 const chalk = require("chalk");
 
-const getNotes = () => "Your notes...";
+// const getNotes = () => "Your notes...";
 
 const addNote = (title, body) => {
 	const notes = loadNotes();
-	const duplicateNotes = notes.filter(note => note.title === title);
-	// const duplicateNotes = notes.filter(function(note) {
-	// 	return note.title === title;
-	// });
+	// const duplicateNotes = notes.filter(note => note.title === title); // look through from the first item to the last item
+	const duplicateNote = notes.find(note => note.title === title); // finish looking through the item when found item.
 
-	if (duplicateNotes.length === 0) {
+	if (!duplicateNote) {
 		notes.push({
 			title: title,
 			body: body
@@ -55,8 +53,35 @@ const removeNote = title => {
 	// const noteIndex = notes.findIndex(filter);
 };
 
+const listNotes = () => {
+	const notes = loadNotes();
+
+	console.log(chalk.green.inverse("Your notes: "));
+	// note: you do not need to name the function.
+	notes.forEach(note => {
+		// note: not for'e'ach!!!
+		console.log(note.title);
+	});
+
+	// console.log(noteTitle);
+	// console.log(noteTitle());
+};
+
+const readNote = title => {
+	const notes = loadNotes();
+	const noteFound = notes.find(note => note.title === title);
+
+	if (!noteFound) {
+		console.log(chalk.red.inverse("No note found."));
+	} else {
+		console.log(chalk.inverse(title));
+		console.log(noteFound.body);
+	}
+};
+
 module.exports = {
-	getNotes: getNotes,
 	addNote: addNote,
-	removeNote: removeNote
+	removeNote: removeNote,
+	listNotes: listNotes,
+	readNote: readNote
 };
