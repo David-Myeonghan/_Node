@@ -8,6 +8,8 @@ const addNote = (title, body) => {
 	// const duplicateNotes = notes.filter(note => note.title === title); // look through from the first item to the last item
 	const duplicateNote = notes.find(note => note.title === title); // finish looking through the item when found item.
 
+	debugger;
+
 	if (!duplicateNote) {
 		notes.push({
 			title: title,
