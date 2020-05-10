@@ -10,7 +10,7 @@ if (!address) {
 } else {
 	// as a callback result, get error or data
 	geocode(address, (error, { latitude, longitude, location } = {}) => {
-		// object destructuring and {,,} = {} is default function paarameters in case or errors occur.
+		// object destructuring and creating individual variables// {,,} = {} is default function parameters in case or errors occur.
 		if (error) {
 			return console.log(error); // if no error, function continue on.
 		}

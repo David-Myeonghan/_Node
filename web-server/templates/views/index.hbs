@@ -3,7 +3,10 @@
 <html>
 
 <head>
-    <!-- <link rel="stylesheet" href="./css/styles.css" /> -->
+    <title>Weather</title>
+    <link rel="icon" href="/img/weather.png">
+
+    {{!-- <link rel="stylesheet" href="./css/styles.css" /> --}}
     <!-- relative path -->
     <link rel="stylesheet" href="/css/styles.css" />
     <!-- absolute path -->
@@ -11,7 +14,11 @@
 </head>
 
 <body>
-    {{>header}}
+    <div class="main-content">
+        {{>header}}
+        <p>Use this site to get weather in your neighbourhood!</p>
+
+    </div>
 
     {{>footer}}
 </body>

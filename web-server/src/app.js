@@ -1,6 +1,8 @@
 const path = require("path");
 const express = require("express"); // express is just a function.
 const hbs = require("hbs");
+const geocode = require("./utils/geocode");
+const forecast = require("./utils/forecast");
 
 // console.log(__dirname); // the directory of the current script lives in.
 // console.log(__filename); // dirname plus the path to the file itself.
@@ -48,11 +50,76 @@ app.get("/about", (req, res) => {
 });
 
 app.get("/help", (req, res) => {
-	res.render("help", { title: "Help", text: "Helpful Text", name: "David" });
+	res.render("help", {
+		title: "Help",
+		text: "Helpful Text",
+		name: "David Ryu",
+	});
 });
 
-app.get("/Weather", (req, res) => {
-	res.send({ forecast: "Cloudy", location: "Brisbane" });
+app.get("/weather", (req, res) => {
+	if (!req.query.address) {
+		return res.send({
+			error: "You must provide an address!",
+		});
+	}
+
+	geocode(
+		req.query.address,
+		(error, { latitude, longitude, location } = {}) => {
+			if (error) {
+				return res.send({
+					error: "Geocode Error!",
+				});
+			}
+
+			forecast(latitude, longitude, (error, forecastData) => {
+				if (error) {
+					return res.send({
+						error: "Forecast Error",
+					});
+				}
+
+				res.send({
+					forecastData,
+					location,
+					address: req.query.address,
+				});
+			});
+		}
+	);
+});
+
+app.get("/products", (req, res) => {
+	if (!req.query.search) {
+		//HTTP only allows one respond per a request
+		return res.send({
+			error: "You must provide a search term!",
+		});
+	}
+
+	console.log(req.query.search);
+	res.send({
+		products: [],
+	});
+});
+
+app.get("/help/*", (req, res) => {
+	res.render("404", {
+		title: "404",
+		name: "David Ryu",
+		errorMessage: "Help article not found",
+	});
+});
+
+// 404 page for all not existing page
+app.get("*", (req, res) => {
+	//Wild card character
+	res.render("404", {
+		title: "404",
+		name: "David Ryu",
+		errorMessage: "Page not found",
+	});
 });
 
 app.listen(3000, () => {
