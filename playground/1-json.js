@@ -14,13 +14,17 @@ const fs = require("fs");
 // console.log(data.title);
 
 const dataBuffer = fs.readFileSync("1-JSON.json");
+console.log(dataBuffer);
 const dataJSON = dataBuffer.toString();
+console.log(dataJSON);
 const user = JSON.parse(dataJSON);
+console.log(user);
 
 user.name = "David";
 user.age = 28;
 
 const userJSON = JSON.stringify(user);
+console.log(userJSON);
 fs.writeFileSync("1-JSON.json", userJSON);
 
 console.log(user);

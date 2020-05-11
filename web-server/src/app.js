@@ -57,6 +57,7 @@ app.get("/help", (req, res) => {
 	});
 });
 
+// finish HTTP endpoint(URI)
 app.get("/weather", (req, res) => {
 	if (!req.query.address) {
 		return res.send({
@@ -67,16 +68,17 @@ app.get("/weather", (req, res) => {
 	geocode(
 		req.query.address,
 		(error, { latitude, longitude, location } = {}) => {
+			// default parameters
 			if (error) {
 				return res.send({
-					error: "Geocode Error!",
+					error,
 				});
 			}
 
 			forecast(latitude, longitude, (error, forecastData) => {
 				if (error) {
 					return res.send({
-						error: "Forecast Error",
+						error,
 					});
 				}
 
