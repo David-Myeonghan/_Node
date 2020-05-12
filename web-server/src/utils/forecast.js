@@ -32,11 +32,11 @@ const forecast = (latitude, longitude, callback) => {
 			callback(
 				undefined,
 				summary +
-				". It is currently " +
-				temperature +
-				" degrees. It feels like " +
-				feelslike +
-				" degrees.",
+					". It is currently " +
+					temperature +
+					" degrees. It feels like " +
+					feelslike +
+					" degrees.",
 				weatherIcon
 			);
 		}
