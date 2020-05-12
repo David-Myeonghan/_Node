@@ -11,7 +11,7 @@ margin: putting space outside of box.
 fetch API is not JS, it's browser based API, which can be used in all modern browser
 
 - heroku suitable for start-ups
-  "heroku login"
+  - "heroku login"
 
 - git
   - download git from git-scm.com
