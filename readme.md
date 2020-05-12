@@ -42,4 +42,11 @@ Untracked Files -> Unstaged Changeds -> Staged Changes -> Commits
   - Register the file: 'ssh-add -K ~/.ssh/id_rsa' (no "-K" for Win and Linux)
     '~/.ssh.id_rsa': providing the path of rsa key.
     
+- Register 'SSH and GPG keys' in Github settings, After setting SSH keys in your local machine and making Github repository in Github.
+  - Doing once is enough for all of the future projects
+  -'new SSH key' for title
+  - contents of public key file for contents
+  - Print the public key file using 'cat ~/.ssh/id_rsa.pub'
+
+  - Test the connection: 'ssh -T git@github.com'
   
