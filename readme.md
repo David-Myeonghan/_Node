@@ -79,3 +79,5 @@ Untracked Files -> Unstaged Changeds -> Staged Changes -> Commits
   - Install modules with '--save-dev', which will be added on devDependencies (installed locally, not globally) in pakage.json
   - It's not gonna be installed on the production environment => saves time, other people will easily know it.
   - terminal command will not work. script command will work.
+
+===

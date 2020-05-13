@@ -9,7 +9,7 @@ const forecast = require("./utils/forecast");
 // console.log(path.join(__dirname, "../public")); // how to manipulate the file path
 
 const app = express();
-const port = process.env.PORT || 3000 // use the port Heroku provides, or 3000
+const port = process.env.PORT || 3000; // use the port Heroku provides, or 3000
 
 // Define paths for express config
 const publicDirectoryPath = path.join(__dirname, "../public");
@@ -66,32 +66,29 @@ app.get("/weather", (req, res) => {
 		});
 	}
 
-	geocode(
-		req.query.address,
-		(error, { latitude, longitude, location } = {}) => {
-			// default parameters
+	geocode(req.query.address, (error, { latitude, longitude, location } = {}) => {
+		// default parameters
+		if (error) {
+			return res.send({
+				error,
+			});
+		}
+
+		forecast(latitude, longitude, (error, forecastData, icon) => {
 			if (error) {
 				return res.send({
 					error,
 				});
 			}
 
-			forecast(latitude, longitude, (error, forecastData, icon) => {
-				if (error) {
-					return res.send({
-						error,
-					});
-				}
-
-				res.send({
-					forecastData,
-					location,
-					address: req.query.address,
-					icon
-				});
+			res.send({
+				forecastData,
+				location,
+				address: req.query.address,
+				icon,
 			});
-		}
-	);
+		});
+	});
 });
 
 app.get("/products", (req, res) => {
