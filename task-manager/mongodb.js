@@ -23,7 +23,26 @@ MongoClient.connect(connectionURL, { useNewUrlParser: true }, (error, client) =>
 
 	const db = client.db(databaseName); // gives database reference (can manipulate now)
 
-	// UPDATE using Promise instead of Callback.
+	// DELETE // in console.log, look at 'deletedCount'
+	// db.collection("users")
+	// 	.deleteMany({ age: 27 })
+	// 	.then((result) => {
+	// 		console.log(result);
+	// 	})
+	// 	.catch((error) => {
+	// 		console.log(error);
+	// 	});
+
+	// db.collection("tasks")
+	// 	.deleteOne({ description: "Eat" })
+	// 	.then((result) => {
+	// 		console.log(result);
+	// 	})
+	// 	.catch((error) => {
+	// 		console.log(error);
+	// 	});
+
+	// UPDATE using Promise instead of Callback. // Look at 'modifiedCount'
 	// db.collection("users")
 	// 	.updateOne({ _id: new ObjectID("5ebb8aee4e80080747b3c7d1") }, { $inc: { age: 1 } })
 	// 	.then((result) => {
@@ -33,14 +52,14 @@ MongoClient.connect(connectionURL, { useNewUrlParser: true }, (error, client) =>
 	// 		console.log(error);
 	// 	});
 
-	db.collection("tasks")
-		.updateMany({ completed: false }, { $set: { completed: true } })
-		.then((result) => {
-			console.log(result);
-		})
-		.catch((error) => {
-			console.log(error);
-		});
+	// db.collection("tasks")
+	// 	.updateMany({ completed: false }, { $set: { completed: true } })
+	// 	.then((result) => {
+	// 		console.log(result);
+	// 	})
+	// 	.catch((error) => {
+	// 		console.log(error);
+	// 	});
 
 	// READ
 	// if you want to search by id, use ObjectID as this is not string, but binary.
