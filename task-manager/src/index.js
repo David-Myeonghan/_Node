@@ -21,69 +21,120 @@ app.post("/users", async (req, res) => {
 	}
 });
 
-app.get("/users", (req, res) => {
-	User.find({})
-		.then((users) => {
-			res.send(users);
-		})
-		.catch((error) => {
-			res.status(500).send();
-		});
+app.get("/users", async (req, res) => {
+	try {
+		const users = await User.find({});
+		res.send(users);
+	} catch (e) {
+		res.status(500).send();
+	}
 });
 
-app.get("/users/:id", (req, res) => {
+app.get("/users/:id", async (req, res) => {
 	const _id = req.params.id; // '_id' should be properly formatted(12, or 24 digits) fake or true id.
 
-	User.findById(_id)
-		.then((user) => {
-			if (!user) {
-				return res.status(404).send();
-			}
+	try {
+		const user = await User.findById(_id);
 
-			res.send(user);
-		})
-		.catch((error) => {
-			res.status(500).send(error);
-		});
+		if (!user) {
+			return res.status(404).send();
+		}
+
+		res.send(user);
+	} catch (e) {
+		res.status(500).send();
+	}
 });
 
-app.post("/tasks", (req, res) => {
+app.patch("/users/:id", async (req, res) => {
+	const updates = Object.keys(req.body); // validating only allowed updates
+	const allowdUpdates = ["name", "email", "password", "age"];
+	const isValidOperation = updates.every((update) => allowdUpdates.includes(update));
+
+	if (!isValidOperation) {
+		return res.status(400).send({ error: "Invalid updates!" });
+	}
+
+	try {
+		const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+
+		if (!user) {
+			return res.status(404).send();
+		}
+
+		res.send(user);
+	} catch (e) {
+		res.status(400).send(e);
+	}
+});
+
+app.post("/tasks", async (req, res) => {
 	const task = new Task(req.body);
 
-	task
-		.save()
-		.then((result) => {
-			res.status(201).send(task);
-		})
-		.catch((error) => {
-			res.status(400).send(error);
-		});
+	try {
+		await task.save();
+		res.status(201).send(task);
+	} catch (e) {
+		res.status(400).send(e);
+	}
 });
 
-app.get("/tasks", (req, res) => {
-	Task.find({})
-		.then((tasks) => {
-			res.send(tasks);
-		})
-		.catch((error) => {
-			res.status(500).send(error);
-		});
+app.get("/tasks", async (req, res) => {
+	try {
+		const tasks = await Task.find({});
+		res.send(tasks);
+	} catch (e) {
+		res.status(500).send(e);
+	}
 });
 
-app.get("/tasks/:id", (req, res) => {
+app.get("/tasks/:id", async (req, res) => {
 	const _id = req.params.id;
 
-	Task.findById(_id)
-		.then((task) => {
-			console.log(task);
-			if (!task) {
-				return res.status(404).send();
-			}
-			res.send(task);
-		})
-		.catch((error) => {
-			res.status(500).send(error);
-		});
+	try {
+		const task = await Task.findById(_id);
+
+		if (!task) {
+			return res.status(404).send();
+		}
+		res.send(task);
+	} catch (e) {
+		res.status(500).send(error);
+	}
+
+	// Chaining Promise in a old way.
+	// Task.findById(_id)
+	// 	.then((task) => {
+	// 		console.log(task);
+	// 		if (!task) {
+	// 			return res.status(404).send();
+	// 		}
+	// 		res.send(task);
+	// 	})
+	// 	.catch((error) => {
+	// 		res.status(500).send(error);
+	// 	});
+});
+
+app.patch("/tasks/:id", async (req, res) => {
+	const updates = Object.keys(req.body); // convert from an object to an array of properties.
+	const allowdUpdates = ["description", "completed"];
+	const isValidOperation = updates.every((update) => allowdUpdates.includes(update));
+
+	if (!isValidOperation) {
+		return res.status(400).send({ error: "Invalid Updates!" });
+	}
+	try {
+		const task = await Task.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+
+		if (!task) {
+			return res.status(404).send();
+		}
+
+		res.send(task);
+	} catch (e) {
+		res.status(400).send(e);
+	}
 });
 
 app.listen(port, () => {
