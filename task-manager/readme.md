@@ -48,4 +48,8 @@
 - Refer to 'https://httpstatuses.com/400' for many http status.
 
 - Async/await
+
   - how to manage the code when having asynchronous things going on.
+
+- Hashed password using 'bcryptjs'
+  - hashing algorithm is an one-way algorithm. not reversible.

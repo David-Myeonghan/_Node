@@ -1,7 +1,9 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
+const bcrypt = require("bcryptjs");
 
-const User = mongoose.model("User", {
+const userSchema = new mongoose.Schema({
+	// Create a separate schema first and then pass it into model
 	// Upper case for model
 	// '_v' means version
 	name: {
@@ -22,6 +24,7 @@ const User = mongoose.model("User", {
 	},
 	email: {
 		type: String,
+		unique: true, // after you set this property up, you need to wipe the DB and recreate.
 		required: true,
 		trim: true,
 		lowercase: true,
@@ -43,6 +46,41 @@ const User = mongoose.model("User", {
 		},
 	},
 });
+
+userSchema.statics.findByCredentials = async (email, password) => {
+	const user = await User.findOne({ email });
+
+	if (!user) {
+		throw new Error("Unable to login: email not registered"); // best to provide a single error, as error with detail would expose of more information.
+	}
+
+	const isMatch = await bcrypt.compare(password, user.password);
+
+	if (!isMatch) {
+		throw new Error("Unable to login");
+	}
+
+	return user;
+};
+
+// Hash the plain text password before saving.
+//'Pre' middleware functions are executed one after another(when 'save' method called), when each middleware calls 'next()'.
+userSchema.pre("save", async function (next) {
+	// arrow function doesn't bind.
+	// Using middleware of Mongoose. provide it once, and it works everywhere the plain password comes in.
+
+	const user = this;
+
+	if (user.isModified("password")) {
+		// to make sure that the password only be hashed when users modified (first created user, or update the password)
+		user.password = await bcrypt.hash(user.password, 8);
+	}
+	// console.log("Just before saving!");
+
+	next();
+});
+
+const User = mongoose.model("User", userSchema);
 
 // --- Example
 // Constructor function
