@@ -45,3 +45,7 @@
   - response body
 
 - Install Nodemon as devDependency & Express as regular dependency
+- Refer to 'https://httpstatuses.com/400' for many http status.
+
+- Async/await
+  - how to manage the code when having asynchronous things going on.
