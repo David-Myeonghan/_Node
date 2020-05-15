@@ -8,7 +8,8 @@ router.post("/users", async (req, res) => {
 	// handle individual errors with individual try/catch statement
 	try {
 		await user.save();
-		res.status(201).send(user);
+		const token = await user.generateAuthToken();
+		res.status(201).send({ user, token });
 	} catch (e) {
 		res.status(400).send(e);
 	}
@@ -16,8 +17,9 @@ router.post("/users", async (req, res) => {
 
 router.post("/users/login", async (req, res) => {
 	try {
-		const user = await User.findByCredentials(req.body.email, req.body.password);
-		res.send(user);
+		const user = await User.findByCredentials(req.body.email, req.body.password); // make sense when we're not working with an individual user but working with the user collection as a whole.
+		const token = await user.generateAuthToken(); // for very specific user, user instance.
+		res.send({ user, token });
 	} catch (e) {
 		res.status(400).send(e);
 	}

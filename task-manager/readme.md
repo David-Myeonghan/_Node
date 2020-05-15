@@ -52,4 +52,10 @@
   - how to manage the code when having asynchronous things going on.
 
 - Hashed password using 'bcryptjs'
+
   - hashing algorithm is an one-way algorithm. not reversible.
+
+- JSON Web Token (JWT) for authentication system, using 'jsonwebtoken' module
+  - consists of three parts: JWT header.payload(body).signature
+  - based on base64
+  - This is public viewable. doesn't need a secret to see this.

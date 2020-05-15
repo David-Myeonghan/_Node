@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 const userSchema = new mongoose.Schema({
 	// Create a separate schema first and then pass it into model
@@ -45,9 +46,30 @@ const userSchema = new mongoose.Schema({
 			}
 		},
 	},
+	// Need to keep track of the generated token for users in order for users to log out/in, or login in multiple devices.
+	tokens: [
+		{
+			token: {
+				type: String,
+				required: true,
+			},
+		},
+	],
 });
 
+userSchema.methods.generateAuthToken = async function () {
+	//are accessible on instance, called 'Instance Methods'
+	const user = this;
+	const token = jwt.sign({ _id: user._id.toString() }, "thisisnode");
+
+	user.tokens = user.tokens.concat({ token }); // save tokens in DB.
+	await user.save();
+
+	return token;
+};
+
 userSchema.statics.findByCredentials = async (email, password) => {
+	// Static methods are accessible on the Model, called 'Model Methods'
 	const user = await User.findOne({ email });
 
 	if (!user) {

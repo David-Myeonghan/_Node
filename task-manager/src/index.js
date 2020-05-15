@@ -8,6 +8,23 @@ const taskRouter = require("./routers/task");
 const app = express();
 const port = process.env.PORT || 3000;
 
+// Without middleware: new request -> run route handler
+// With middleware: new request -> do something -> run route handler
+// app.use((req, res, next) => {
+// 	if (req.method === "GET") {
+// 		res.send("GET requests are disabled");
+// 	} else {
+// 		next();
+// 	}
+// 	// console.log(req.method, req.path);
+// 	// next(); // if you have the next thing to do after executing middlewre, don't forget to write next(), or it takes forever.
+// });
+
+// middleware for server maintenance
+app.use((req, res, next) => {
+	res.status(503).send("Server in maintenance now. Check back soon!");
+});
+
 // automatically parse incoming json into an object to access
 app.use(express.json());
 app.use(userRouter);
@@ -24,17 +41,33 @@ app.listen(port, () => {
 	console.log("Server is up on port " + port);
 });
 
-const bcrypt = require("bcryptjs");
+// ===
+// Experiment
+
+// Example bcrypt.
+// const bcrypt = require("bcryptjs");
+
+// const myFunction = async () => {
+// 	const password = "asdflkj1";
+// 	const hashedPassword = await bcrypt.hash(password, 8); // 8 is recommended.
+
+// 	console.log(password);
+// 	console.log(hashedPassword);
+
+// 	const isMatch = await bcrypt.compare("Asdflkj1", hashedPassword);
+// 	console.log(isMatch);
+// };
+
+// myFunction();
+
+const jwt = require("jsonwebtoken");
 
 const myFunction = async () => {
-	const password = "asdflkj1";
-	const hashedPassword = await bcrypt.hash(password, 8); // 8 is recommended.
+	const token = jwt.sign({ _id: "abc123" }, "thisisnode", { expiresIn: "7 days" });
+	console.log(token);
 
-	console.log(password);
-	console.log(hashedPassword);
-
-	const isMatch = await bcrypt.compare("Asdflkj1", hashedPassword);
-	console.log(isMatch);
+	const data = jwt.verify(token, "thisisnode");
+	console.log(data);
 };
 
 myFunction();
