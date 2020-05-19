@@ -20,6 +20,7 @@ router.post("/users/login", async (req, res) => {
 	try {
 		const user = await User.findByCredentials(req.body.email, req.body.password); // make sense when we're not working with an individual user but working with the user collection as a whole.
 		const token = await user.generateAuthToken(); // for very specific user, user instance.
+		// res.send({ user: user.getPublicProfile(), token });
 		res.send({ user, token });
 	} catch (e) {
 		res.status(400).send(e);
@@ -61,23 +62,23 @@ router.get("/users/me", auth, async (req, res) => {
 	res.send(req.user); // send the user fetched from auth middleware through req.
 });
 
-router.get("/users/:id", async (req, res) => {
-	const _id = req.params.id; // '_id' should be properly formatted(12, or 24 digits) fake or true id.
+// router.get("/users/:id", async (req, res) => {
+// 	const _id = req.params.id; // '_id' should be properly formatted(12, or 24 digits) fake or true id.
 
-	try {
-		const user = await User.findById(_id);
+// 	try {
+// 		const user = await User.findById(_id);
 
-		if (!user) {
-			return res.status(404).send();
-		}
+// 		if (!user) {
+// 			return res.status(404).send();
+// 		}
 
-		res.send(user);
-	} catch (e) {
-		res.status(500).send();
-	}
-});
+// 		res.send(user);
+// 	} catch (e) {
+// 		res.status(500).send();
+// 	}
+// });
 
-router.patch("/users/:id", async (req, res) => {
+router.patch("/users/me", auth, async (req, res) => {
 	const updates = Object.keys(req.body); // validating only allowed updates
 	const allowdUpdates = ["name", "email", "password", "age"];
 	const isValidOperation = updates.every((update) => allowdUpdates.includes(update));
@@ -91,29 +92,32 @@ router.patch("/users/:id", async (req, res) => {
 		// of the advantages of Mongoose middleware for hashing password where the plain text password is provided to here.
 		// const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
 
-		const user = await User.findById(req.params.id);
-		updates.forEach((update) => (user[update] = req.body[update])); // this is how we access to a property dynamically instead of using '.', which is hardcoded and static.
-		await user.save();
+		// const user = await User.findById(req.params.id); // Insteaad of fetching a user, use from req.user
 
-		if (!user) {
-			return res.status(404).send();
-		}
+		updates.forEach((update) => (req.user[update] = req.body[update])); // this is how we access to a property dynamically instead of using '.', which is hardcoded and static.
+		await req.user.save();
 
-		res.send(user);
+		// if (!user) { // no longer needed as a user logged in just now.
+		// 	return res.status(404).send();
+		// }
+
+		res.send(req.user);
 	} catch (e) {
 		res.status(400).send(e);
 	}
 });
 
-router.delete("/users/:id", async (req, res) => {
+router.delete("/users/me", auth, async (req, res) => {
 	try {
-		const user = await User.findByIdAndDelete(req.params.id);
+		// const user = await User.findByIdAndDelete(req.user._id);
 
-		if (!user) {
-			return res.status(404).send();
-		}
+		// if (!user) {
+		// 	return res.status(404).send();
+		// }
 
-		res.send(user);
+		await req.user.remove();
+
+		res.send(req.user);
 	} catch (e) {
 		res.status(500).send();
 	}

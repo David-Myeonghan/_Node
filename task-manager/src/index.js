@@ -60,14 +60,39 @@ app.listen(port, () => {
 
 // myFunction();
 
-const jwt = require("jsonwebtoken");
+// Example JWT
+// const jwt = require("jsonwebtoken");
 
-const myFunction = async () => {
-	const token = jwt.sign({ _id: "abc123" }, "thisisnode", { expiresIn: "7 days" });
-	console.log(token);
+// const myFunction = async () => {
+// 	const token = jwt.sign({ _id: "abc123" }, "thisisnode", { expiresIn: "7 days" });
+// 	console.log(token);
 
-	const data = jwt.verify(token, "thisisnode");
-	console.log(data);
+// 	const data = jwt.verify(token, "thisisnode");
+// 	console.log(data);
+// };
+
+// myFunction();
+
+// Example of toJSON
+// const pet = {
+// 	name: "Ria",
+// };
+
+// pet.toJSON = function () {
+// 	console.log(this);
+// 	return this;
+// };
+
+// console.log(JSON.stringify(pet));
+
+// Example Populating using 'ref' in Task model
+// const Task = require("./models/task");
+
+const main = async () => {
+	const task = await Task.findById("5ec3baabfce6392b6b4c8cc2");
+	await task.populate("owner").execPopulate();
+
+	console.log(task.owner);
 };
 
-myFunction();
+main(0);

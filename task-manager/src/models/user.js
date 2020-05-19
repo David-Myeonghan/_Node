@@ -57,9 +57,32 @@ const userSchema = new mongoose.Schema({
 	],
 });
 
+// userSchema.methods.getPublicProfile = function () {
+// 	// manual way to hide user info such as password and tokens
+// 	const user = this;
+// 	const userObject = user.toObject(); // toObject() gives raw profile data
+
+// 	delete userObject.password;
+// 	delete userObject.tokens;
+
+// 	return userObject;
+// };
+
+userSchema.methods.toJSON = function () {
+	// res.send(), JSON.stringify() is working behind the scenes, so we're just deleting the info we don't wanna expose
+	// automated way to hide user info such as password and tokens
+	const user = this;
+	const userObject = user.toObject(); // toObject() gives raw profile data
+
+	delete userObject.password;
+	delete userObject.tokens;
+
+	return userObject;
+};
+
 userSchema.methods.generateAuthToken = async function () {
 	//are accessible on instance, called 'Instance Methods'
-	const user = this;
+	const user = this; // makes easier to work with
 	const token = jwt.sign({ _id: user._id.toString() }, "thisisnode");
 
 	user.tokens = user.tokens.concat({ token }); // save tokens in DB.
