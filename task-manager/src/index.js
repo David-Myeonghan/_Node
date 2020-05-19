@@ -21,9 +21,9 @@ const port = process.env.PORT || 3000;
 // });
 
 // middleware for server maintenance
-app.use((req, res, next) => {
-	res.status(503).send("Server in maintenance now. Check back soon!");
-});
+// app.use((req, res, next) => {
+// 	res.status(503).send("Server in maintenance now. Check back soon!");
+// });
 
 // automatically parse incoming json into an object to access
 app.use(express.json());

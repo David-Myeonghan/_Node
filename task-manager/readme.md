@@ -56,6 +56,10 @@
   - hashing algorithm is an one-way algorithm. not reversible.
 
 - JSON Web Token (JWT) for authentication system, using 'jsonwebtoken' module
+
   - consists of three parts: JWT header.payload(body).signature
   - based on base64
   - This is public viewable. doesn't need a secret to see this.
+
+  - Set up key value pairs in request headers, providing additional information to the server.
+    - key: 'Authorization', value: 'Bearer TOKEN#'
